@@ -1,0 +1,17 @@
+#Monodb Configuration
+spring:
+  data:
+    mongodb:
+      database: comparison
+      #username:
+      #password:
+      host: localhost
+      port: 27017
+  mongodb:
+    embedded:
+      version: 3.2.2
+      features: ONLY_WITH_SSL, ONLY_WINDOWS_2008_SERVER
+
+logging:
+  level:
+    com.silaev.comparison: DEBUG

@@ -10,16 +10,16 @@ import com.silaev.comparison.util.TestUtil;
 import com.silaev.comparison.version.ApiV1;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Slf4j
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @ActiveProfiles("test")
@@ -48,9 +48,9 @@ class ComparisonApplicationIT {
             "left, aXkxMW15MjI1ODMxMXM=, iy11my2258311s",
             "right, dXQxMXh5MjM4MTMxMXk=, ut11xy2381311y",
     })
-    void shouldCreatePartData(String dataPartParam,
-                              String dataEncodedParam,
-                              String dataDecodedParam) {
+    void shouldCreatePartDataAndAvoidDuplication(String dataPartParam,
+                                                 String dataEncodedParam,
+                                                 String dataDecodedParam) {
         //GIVEN
         initDb();
         int userId = 1;
@@ -69,15 +69,25 @@ class ComparisonApplicationIT {
                 .body(dtoMono, EncodedRequestDto.class)
                 .exchange();
 
+        WebTestClient.ResponseSpec exchangeDuplication = webClient.post()
+                .uri(BASE_URL + "/" + userId + "/" + dataPartParam)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(dtoMono, EncodedRequestDto.class)
+                .exchange();
+
         //THEN
         exchange.expectStatus()
                 .isCreated()
                 .expectBody(Diff.class)
                 .isEqualTo(diffExpected);
+
+        exchangeDuplication.expectStatus()
+                .isBadRequest();
     }
 
     @Test
-    void shouldNotCreatePartData() {
+    void shouldNotCreatePartDataDueToEmptyPayload() {
         //GIVEN
         int userId = 1;
         String dataEncodedParam = "";

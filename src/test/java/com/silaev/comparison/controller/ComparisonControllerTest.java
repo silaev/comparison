@@ -6,7 +6,6 @@ import com.silaev.comparison.entity.Diff;
 import com.silaev.comparison.model.DataPart;
 import com.silaev.comparison.model.DiffStatus;
 import com.silaev.comparison.service.ComparisonService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,7 +17,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,10 +28,6 @@ class ComparisonControllerTest {
 
     @InjectMocks
     ComparisonController comparisonController;
-
-    @BeforeEach
-    void setUp() {
-    }
 
     @ParameterizedTest(name = "{index} => dataPart={0}, data={1}")
     @CsvSource({

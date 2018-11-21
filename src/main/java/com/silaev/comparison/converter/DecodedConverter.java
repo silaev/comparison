@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import java.util.Base64;
 
 /**
- * Encodes a string via Base64 decoder.
+ * Encodes a string by means of Base64 decoder.
  */
 @Component
 public class DecodedConverter {

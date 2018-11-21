@@ -1,10 +1,11 @@
 package com.silaev.comparison.converter;
 
 import com.silaev.comparison.model.DataPart;
+
 import java.beans.PropertyEditorSupport;
 
 /**
- * Converts string to DataPart enum.
+ * Converts a string to a DataPart enum.
  */
 public class StringToDataPartConverter extends PropertyEditorSupport {
 

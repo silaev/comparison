@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * A dto is for a response.
+ */
 @Data
 @Builder
 @AllArgsConstructor

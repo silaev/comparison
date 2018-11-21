@@ -49,14 +49,14 @@ dependencies {
 	//Never use it in a real prod.
 	implementation('de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.1.1')
 
-	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	testImplementation('org.springframework.boot:spring-boot-starter-test'){
+		exclude group: 'junit', module: 'junit'
+	}
     testImplementation('io.projectreactor:reactor-test')
-
-	testImplementation('org.junit.jupiter:junit-jupiter-api:5.3.1')
+	
 	testCompile('org.junit.jupiter:junit-jupiter-params:5.3.1')
 	testRuntime('org.junit.jupiter:junit-jupiter-engine:5.3.1')
 
-	testCompile "org.mockito:mockito-core:2.+"
 	testCompile('org.mockito:mockito-junit-jupiter:2.23.0') 
 }
 test {

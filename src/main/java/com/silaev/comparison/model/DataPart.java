@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Objects;
 
+/**
+ * An enum for data part.
+ */
 @RequiredArgsConstructor
 @Getter
 public enum DataPart {

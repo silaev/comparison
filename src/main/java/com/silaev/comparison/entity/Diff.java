@@ -10,6 +10,10 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * A document for storing some diff data.
+ * Employs @CompoundIndex to prevent data duplication.
+ */
 @Data
 @Document
 @Builder

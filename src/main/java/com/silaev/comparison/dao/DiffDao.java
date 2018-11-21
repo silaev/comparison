@@ -6,6 +6,9 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+/**
+ * Performs basic operations to MongoDB in a reactive way.
+ */
 @Repository
 public interface DiffDao extends ReactiveMongoRepository<Diff, String> {
     Mono<Diff> findByUserIdAndDataPart(Integer userId, DataPart dataPart);

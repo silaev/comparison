@@ -7,7 +7,8 @@ import org.springframework.data.annotation.Version;
 import java.io.Serializable;
 
 /**
- * Keeps common fields.
+ * Keeps common fields that are necessary for all
+ * Documents.
  */
 @Data
 abstract class BaseEntity implements Serializable {

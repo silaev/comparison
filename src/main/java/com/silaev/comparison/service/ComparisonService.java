@@ -2,8 +2,8 @@ package com.silaev.comparison.service;
 
 import com.silaev.comparison.converter.DecodedConverter;
 import com.silaev.comparison.dao.DiffDao;
-import com.silaev.comparison.dto.ResponseDto;
 import com.silaev.comparison.dto.EncodedRequestDto;
+import com.silaev.comparison.dto.ResponseDto;
 import com.silaev.comparison.entity.Diff;
 import com.silaev.comparison.model.DataPart;
 import com.silaev.comparison.model.DiffStatus;
@@ -56,9 +56,10 @@ public class ComparisonService {
     }
 
     private List<ResponseDto> getDiffDtos(Diff leftDiff, Diff rightDiff) {
-
+        //basic validation for possible manual modifications to MongoDb.
         String leftData = Objects.requireNonNull(leftDiff.getData());
         String rightData = Objects.requireNonNull(rightDiff.getData());
+
         int leftDataLength = leftData.length();
 
         List<ResponseDto> responseDtos = new ArrayList<>();
@@ -68,7 +69,7 @@ public class ComparisonService {
                     .build());
         } else {
             //NOT_EQUAL_SIZE is impossible here because
-            //length equality is checks in equals() above.
+            //the length equality is checks in equals() above.
 
             String[] leftArr = leftData.split("");
             String[] rightArr = rightData.split("");

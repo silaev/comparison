@@ -34,7 +34,7 @@ class ComparisonServiceTest {
     DiffDao diffDao;
 
     @InjectMocks
-    ComparisonService comparisonService;
+    ComparisonServiceImpl comparisonService;
 
     @ParameterizedTest(name = "{index} => data part={0}, data encoded={1}, data decoded={2}")
     @CsvSource({
@@ -142,6 +142,34 @@ class ComparisonServiceTest {
                 .thenReturn(diffMono2);
         ResponseDto responseDtoExpected =
                 ResponseDto.builder().diffStatus(DiffStatus.EQUAL).build();
+
+        //WHEN
+        Flux<ResponseDto> responseDtoFlux = comparisonService.getDifference(userId);
+
+        //THEN
+        StepVerifier.create(responseDtoFlux)
+                .expectNext(responseDtoExpected)
+                .verifyComplete();
+    }
+
+    @Test()
+    void shouldGetDifferenceNotEqualSize() {
+        //GIVEN
+        int userId = 1;
+        String leftData = "iy11my2258311";
+        String rightData = "iy11my2258311s";
+        Diff diff1 = TestUtil.mockDiff(userId, leftData, DataPart.LEFT);
+        Mono<Diff> diffMono1 = Mono.just(diff1);
+
+        Diff diff2 = TestUtil.mockDiff(userId, rightData, DataPart.RIGHT);
+        Mono<Diff> diffMono2 = Mono.just(diff2);
+
+        when(diffDao.findByUserIdAndDataPart(userId, DataPart.LEFT))
+                .thenReturn(diffMono1);
+        when(diffDao.findByUserIdAndDataPart(userId, DataPart.RIGHT))
+                .thenReturn(diffMono2);
+        ResponseDto responseDtoExpected =
+                ResponseDto.builder().diffStatus(DiffStatus.NOT_EQUAL_SIZE).build();
 
         //WHEN
         Flux<ResponseDto> responseDtoFlux = comparisonService.getDifference(userId);

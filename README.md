@@ -1,6 +1,9 @@
-#HTTP API for a comparison application. 
+# HTTP API for a comparison application [![Build Status](https://travis-ci.org/silaev/comparison.svg?branch=master)](https://travis-ci.org/silaev/comparison) 
 
-####General info
+#### Prerequisites
+Java 8+
+
+#### General info
 The app lets upload two part of the data (a key in a Json payload)
 to compare them. Meaning that once a couple of proper POST* requests 
 are called to both `/v1/diff/id/left` and `/v1/diff/id/right`, 
@@ -22,20 +25,19 @@ payload with the same id and data part.
 After comparing the difference between the values of the data,
 the app responses with either `EQUAL` or `DIFF` statuses in accordance with
 the following:
-- `EQUAL` when the decoded values are the same;   
+- `EQUAL` when the decoded values are the same;
+- `NOT_EQUAL_SIZE` when the decoded values are of different size;   
 - `DIFF` with the information of lengths and offsets 
 when they are different. This data might be streamed to a client
 and has `application/stream+json` media type.
-It's worth mentioning that NOT_EQUAL_SIZE is not on the table here,
-cause the app uses the equals method of String.
   
-####Justification to use strings to compare.
+#### Justification to use strings to compare.
 Although Base64 is designed to send some binary data, 
 the app uses it accept encoded strings. This is because it's not so 
 interesting and visual to compare binary data in terms of
 offsets and lengths.
           
-####Requirements to consider before using the app.
+#### Requirements to consider before using the app.
 1. The project should be built by means of Gradle. For that reason, run `gradlew clean build`.
 Subsequently, to start the application make use of `gradlew bootRun`
 2. All the examples of possible requests might be found in  

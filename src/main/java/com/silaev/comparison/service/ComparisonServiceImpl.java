@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,11 +54,15 @@ public class ComparisonServiceImpl implements ComparisonService {
         Mono<Diff> rightMonoDiff = diffDao.findByUserIdAndDataPart(id, DataPart.RIGHT)
                 .switchIfEmpty(Mono.error(new IllegalStateException("The right part is empty!")));
 
-        return Mono.zip(leftMonoDiff, rightMonoDiff, this::getDiffDtos)
-                .flatMapIterable(Function.identity());
+        return Mono.zip(leftMonoDiff, rightMonoDiff)
+                //switching threads so that not to block the event loop
+                .publishOn(Schedulers.parallel())
+                .flatMap(x -> getDiffDtos(x.getT1(), x.getT2()))
+                .flatMapIterable(Function.identity())
+                .log();
     }
 
-    private List<ResponseDto> getDiffDtos(Diff leftDiff, Diff rightDiff) {
+    private Mono<List<ResponseDto>> getDiffDtos(Diff leftDiff, Diff rightDiff) {
         //basic validation for possible manual modifications to MongoDb.
         String leftData = Objects.requireNonNull(leftDiff.getData());
         String rightData = Objects.requireNonNull(rightDiff.getData());
@@ -114,6 +119,6 @@ public class ComparisonServiceImpl implements ComparisonService {
                     .build());
         }
 
-        return responseDtos;
+        return Mono.just(responseDtos);
     }
 }
